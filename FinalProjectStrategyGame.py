@@ -97,7 +97,7 @@ def exit():
 # help function
 def help():
   global name
-  descr = "Hi," + name + "! "
+  descr = "Hi, " + name + "! "
   descr+= "How to play the game:"
   descr+= "\nYour mission is to pick a Krabby Patty from the Krusty Krab and take it to Patrick's house. "
   descr+="You are going to need a spatula to pick the krabby patty! "
@@ -116,7 +116,7 @@ def pineapple():
   global object1picked
   pineapplePic = makePicture("pineapple_house.jpg")
   global pic
-  pic = pyCopy(pineapplePic, pic, 0,0)
+  pic = copyInto(pineapplePic, pic, 0,0) # Jython function just like our pyCopy() but much faster!
   repaint(pic)
   
   # Description
@@ -171,7 +171,8 @@ def pineapple():
     elif (chc == "pick spatula" and object1picked == false): # to pick spatula
       object1picked = true
       addTextWithStyle(tempPic, 330, 500, "You have picked the spatula!", s, red)
-      pic = pyCopyNB(spatulaPic,tempPic,253,230)
+      pyCopyNB(spatulaPic,tempPic,253,230)
+      copyInto(tempPic, pic, 0,0)
       repaint(pic)
       play(laugh)
     elif (chc == "pick spatula" and object1picked == true): # you already have the spatula
@@ -188,7 +189,7 @@ def squidward():
   check = true
   squidHousePic = makePicture("squidHousePic.png")
   global pic
-  pic = pyCopy(squidHousePic, pic, 0,0)
+  pic = copyInto(squidHousePic, pic, 0,0)
   repaint(pic)
   
   # Description
@@ -243,7 +244,7 @@ def patrick():
   check = true
   patrickHousePic = makePicture("patrickHousePic.jpg")
   global pic
-  pic = pyCopy(patrickHousePic, pic, 0,0)
+  pic = copyInto(patrickHousePic, pic, 0,0)
   repaint(pic)
   # Description
   descr = "The house is a large brown rock with a wind vane on top."
@@ -355,7 +356,7 @@ def sandy():
   check = true
   domePic = makePicture("dome.png")
   global pic
-  pic = pyCopy(domePic, pic, 0,0)
+  pic = copyInto(domePic, pic, 0,0)
   repaint(pic)
   # Description
   descr = "You have arrived at your friend Sandy Cheeks glass dome house, the Treedome"
@@ -411,7 +412,7 @@ def chum():
   check = true
   chumPic = makePicture("chum.png")
   global pic
-  pic = pyCopy(chumPic, pic, 0,0)
+  pic = copyInto(chumPic, pic, 0,0)
   repaint(pic)
   # Description
   descr = "Located directly across the street from the Krusty Krab."
@@ -468,24 +469,24 @@ def krusty():
   check = true
   kkPic = makePicture("krusty_krab.jpg")
   global pic
-  pic = pyCopy(kkPic, pic, 0,0)
+  pic = copyInto(kkPic, pic, 0,0)
   repaint(pic)
   
   # Description
   descr = "A fast food restaurant located in Bikini Bottom, founded and owned by Eugene H. Krabs."
-  addTextWithStyle(pic, 30, 20, descr, s2, red)
+  addTextWithStyle(pic, 50, 20, descr, s2, red)
   descr = "It is the most popular restaurant in Bikini Bottom. Mr. Krabs loves money!"
-  addTextWithStyle(pic, 30, 40, descr, s2, red)
+  addTextWithStyle(pic, 50, 40, descr, s2, red)
   descr = "This is were you work as a fry cook."
-  addTextWithStyle(pic, 30, 60, descr, s2, red)
+  addTextWithStyle(pic, 50, 60, descr, s2, red)
   descr = "If you have your spatula you can pick a delicious krabby patty!"
-  addTextWithStyle(pic, 30, 80, descr, s2, red)
+  addTextWithStyle(pic, 50, 80, descr, s2, red)
   descr = "To pick a krabby patty type 'pick patty'."
-  addTextWithStyle(pic, 30, 100, descr, s2, red)
+  addTextWithStyle(pic, 50, 100, descr, s2, red)
   descr = "To pick the Krabby Patty Secret Formula type 'pick formula'."
-  addTextWithStyle(pic, 30, 120, descr, s2, red)
+  addTextWithStyle(pic, 50, 120, descr, s2, red)
   repaint(pic)
-  pyCopyNB(SpongebobPic,pic,100,300)
+  pyCopyNB(SpongebobPic,pic,150,350)
   pyCopyNB(shrink(formulaPic),pic,500,150)
   pyCopyNB(shrink(shrink(pattyPic)),pic,600,380)
   repaint(pic)
