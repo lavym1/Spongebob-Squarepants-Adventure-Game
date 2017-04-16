@@ -3,21 +3,6 @@
 import time
 setMediaPath()
 
-pic = makePicture("Spongebob_Adventure_Game.jpg")
-SpongebobPic = makePicture("Spongebob.png")
-spatulaPic = makePicture("spatula.png")
-pattyPic = makePicture("patty.png")
-formulaPic = makePicture("formula.png")
-
-s = makeStyle(sansSerif, bold, 30)
-s2 = makeStyle(sansSerif, bold, 15)
-object1picked = false #spatula
-object2picked = false #krabby patty
-object3picked = false #secret formula
-name = requestString("Enter your name:")
-bubbles = changeVolume(makeSound("bubbles.wav"),2)
-laugh = changeVolume(makeSound("SB_laugh.wav"),2)
-
 def pyCopy(source, target, targetX, targetY):
   for x in range (0, getWidth(source)):
     for y in range (0, getHeight(source)):
@@ -64,6 +49,22 @@ def changeVolume(sound, factor):
       value = getSampleValue(sample)
       setSampleValue(sample, value * factor)
    return(sound)
+
+pic = makePicture("Spongebob_Adventure_Game.jpg")
+SpongebobPic = makePicture("Spongebob.png")
+spatulaPic = makePicture("spatula.png")
+pattyPic = makePicture("patty.png")
+formulaPic = makePicture("formula.png")
+
+s = makeStyle(sansSerif, bold, 30)
+s2 = makeStyle(sansSerif, bold, 15)
+
+object1picked = false #spatula
+object2picked = false #krabby patty
+object3picked = false #secret formula
+name = requestString("Enter your name:")
+bubbles = changeVolume(makeSound("bubbles.wav"),2)
+laugh = changeVolume(makeSound("SB_laugh.wav"),2)
 
 def playGame():
   sound = makeSound("SB_intro.wav")
@@ -305,7 +306,7 @@ def jelly():
   check = true
   jellyPic = makePicture("jellyfish_fields.jpg")
   global pic
-  pic = pyCopy(jellyPic, pic, 0,0)
+  pic = copyInto(jellyPic, pic, 0,0)
   repaint(pic)
   
   # Description
@@ -527,6 +528,11 @@ def krusty():
     elif chc == "pick formula": # to pick the secret formula
       global object3picked
       object3picked = true
+      addTextWithStyle(tempPic, 300, 500, "You have picked the Krabby Patty Secret Formula!", s, red)
+      pyCopyNB(formulaPic,tempPic,253,230)
+      copyInto(tempPic, pic, 0,0)
+      repaint(pic)
+      play(laugh)
       showInformation("You have picked the krabby patty secret formula! Do not take it to the Chum Bucket!!!!")
     elif chc == "north" or chc == "east":
       showInformation("You cannot go "+ chc +" from here, try south, west, or type EXIT to quit.")
