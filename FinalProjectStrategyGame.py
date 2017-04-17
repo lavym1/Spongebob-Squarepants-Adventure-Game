@@ -53,9 +53,11 @@ def changeVolume(sound, factor):
 pic = makePicture("Spongebob_Adventure_Game.jpg")
 SpongebobPic = makePicture("Spongebob.png")
 spatulaPic = makePicture("spatula.png")
-pattyPic = makePicture("patty.png")
-formulaPic = makePicture("formula.png")
-
+pattyPic = shrink(shrink(makePicture("patty.png")))
+formulaPic = shrink(makePicture("formula.png"))
+loseGamePic = makePicture("gameOver.jpg")
+winGamePic = makePicture("win.png")
+exitGamePic = makePicture("exit.jpg")
 s = makeStyle(sansSerif, bold, 30)
 s2 = makeStyle(sansSerif, bold, 15)
 
@@ -65,6 +67,10 @@ object3picked = false #secret formula
 name = requestString("Enter your name:")
 bubbles = changeVolume(makeSound("bubbles.wav"),2)
 laugh = changeVolume(makeSound("SB_laugh.wav"),2)
+evilLaugh = changeVolume(makeSound("plankton_evil_laugh.wav"),2)
+patrickLaugh = changeVolume(makeSound("Patricks_laugh.wav"),2)
+squidw = changeVolume(makeSound("squidward.wav"),2)
+garyMeow = changeVolume(makeSound("gary.wav"),2)
 
 def playGame():
   sound = makeSound("SB_intro.wav")
@@ -92,7 +98,12 @@ def playGame():
 
 # exit function
 def exit():
-  printNow("Good bye Spongebob!")
+  global name
+  global pic
+  pic = copyInto(exitGamePic, pic, 0,0)
+  repaint(pic)
+  addTextWithStyle(pic, 310, 515, "Goodbye " + name + " !", s, red)
+  repaint(pic)
   return
 
 # help function
@@ -177,8 +188,7 @@ def pineapple():
       repaint(pic)
       play(laugh)
     elif (chc == "pick spatula" and object1picked == true): # you already have the spatula
-      addTextWithStyle(pic, 330, 500, "You already have the spatula!", s, red)
-      repaint(pic)
+      showInformation("You already have the spatula!")
     elif chc == "north":
       showInformation("You cannot go "+ chc +" from here, try west, east, south, or type EXIT to quit.")
       check = true
@@ -208,6 +218,7 @@ def squidward():
   pyCopyNB(SpongebobPic,pic,100,300)
   repaint(pic)
   play(bubbles)
+  play(squidw)
   
   # destination choice loop
   while check == true:
@@ -264,9 +275,14 @@ def patrick():
   play(bubbles)
   
   if (object2picked == true):#if player has object2picked (the patty), he wins the game
-    #ADD YOU WON PHOTO!!!
-    addTextWithStyle(pic, 330, 500, "You WON!!!", s, red)
-    showInformation("Congratulations " + name + ", you won the game! Patrick ate the delicious krabby patty!\nGame Over")
+    global name
+    pic = copyInto(winGamePic, pic, 0,0)
+    repaint(pic)
+    play(patrickLaugh)
+    time.sleep(2)
+    addTextWithStyle(pic, 300, 260, "YOU WON!", s, red)
+    repaint(pic)
+    showInformation("Congratulations " + name + ", you won the game! Patrick is eating the delicious krabby patty!")
     check = false
     exit()
   
@@ -411,6 +427,7 @@ def sandy():
 ###############################
 def chum():
   check = true
+  global object3picked
   chumPic = makePicture("chum.png")
   global pic
   pic = copyInto(chumPic, pic, 0,0)
@@ -430,7 +447,13 @@ def chum():
   
   if (object3picked == true):# if player went to Chum Bucket with object3picked (secret formula), he loses the game
     global name
-    showInformation("Plankton stole your Krabby Patty Secret Formula, " + name + " and you lost the game!\nGame Over")
+    pic = copyInto(loseGamePic, pic, 0,0)
+    repaint(pic)
+    play(evilLaugh)
+    time.sleep(2)
+    addTextWithStyle(pic, 350, 260, "GAME OVER!", s, red)
+    repaint(pic)
+    showInformation("Plankton stole your Krabby Patty Secret Formula " + name + ", and you lost the game!")
     check = false
     exit()
   
@@ -470,6 +493,7 @@ def krusty():
   check = true
   kkPic = makePicture("krusty_krab.jpg")
   global pic
+  global object3picked
   pic = copyInto(kkPic, pic, 0,0)
   repaint(pic)
   
@@ -488,8 +512,10 @@ def krusty():
   addTextWithStyle(pic, 50, 120, descr, s2, red)
   repaint(pic)
   pyCopyNB(SpongebobPic,pic,150,350)
-  pyCopyNB(shrink(formulaPic),pic,500,150)
-  pyCopyNB(shrink(shrink(pattyPic)),pic,600,380)
+  pyCopyNB(pattyPic, pic, 600, 380) # unlimited number of krabby patties available
+  tempPic = duplicatePicture(pic)
+  if object3picked == false:
+    pyCopyNB(formulaPic,pic,500,150)
   repaint(pic)
   play(bubbles)
   
@@ -522,18 +548,23 @@ def krusty():
       if object1picked == true: # player has the spatula required to pick krabby patty
         global object2picked
         object2picked = true
-        printNow("You have picked the krabby patty! Now take it to Patrick to win the game")
+        addTextWithStyle(pic, 70, 570, "You have picked a krabby patty! Take it to Patrick!", s, red)
+        pyCopyNB(pattyPic, pic, 115, 365)
+        repaint(pic)
+        play(laugh)
       else:
         showInformation("You need to pick the spatula from the Pineaple house FIRST! Go back to the Pineapple house, type 'pick spatula', and then come back.")
-    elif chc == "pick formula": # to pick the secret formula
+    elif (chc == "pick formula" and object3picked == false): # to pick the secret formula
       global object3picked
       object3picked = true
-      addTextWithStyle(tempPic, 300, 500, "You have picked the Krabby Patty Secret Formula!", s, red)
-      pyCopyNB(formulaPic,tempPic,253,230)
+      addTextWithStyle(tempPic, 260, 530, "You have picked the Secret Formula!", s, red)
+      pyCopyNB(formulaPic,tempPic,350,275)
       copyInto(tempPic, pic, 0,0)
       repaint(pic)
       play(laugh)
-      showInformation("You have picked the krabby patty secret formula! Do not take it to the Chum Bucket!!!!")
+      showInformation("You have picked the Krabby Patty Secret Formula! Do not take it to the Chum Bucket!!!!")
+    elif (chc == "pick formula" and object3picked == true): #player already has secret formula
+      showInformation("You already have the Krabby Patty Secret Formula!")
     elif chc == "north" or chc == "east":
       showInformation("You cannot go "+ chc +" from here, try south, west, or type EXIT to quit.")
       check = true
@@ -543,15 +574,24 @@ def krusty():
 ############
 def gary():
   check = true
+  secretRoomPic = makePicture("gary.png")
+  global pic
+  pic = copyInto(secretRoomPic, pic, 0,0)
+  repaint(pic)
+  play(bubbles)
+  
   
   # Description
-  descr = "~~~~~~~~~~~~ Gary's secret room ~~~~~~~~~~~~\n"
-  descr += "You found the SECRET ROOM where your belowed pet snail hides sometimes\n"
-  descr += "Gary is a domesticated house pet with similar mannerisms to a cat, but has royal blood,\n"
-  descr += "Gary has great intelligence (at least for a snail).\n"
-  descr += "Gary is known for his characteristic 'meow'- in contrast to the barking of the sea worms\n"
-  descr += "Destination choice is: \n the Pinneaple house, or EXIT to quit.\n"
-  printNow(descr)
+  descr = "You found the SECRET ROOM where your belowed pet snail hides sometimes"
+  addTextWithStyle(pic, 50, 20, descr, s2, red)
+  descr = "Gary is a domesticated house pet with similar mannerisms to a cat, but has royal blood,"
+  addTextWithStyle(pic, 50, 40, descr, s2, red)
+  descr = "Gary has great intelligence (at least for a snail)."
+  addTextWithStyle(pic, 50, 60, descr, s2, red)
+  descr = "Gary is known for his characteristic 'meow'- in contrast to the barking of the sea worms"
+  addTextWithStyle(pic, 50, 80, descr, s2, red)
+  repaint(pic)
+  play(garyMeow)
   
   # destination choice loop
   while check == true:
@@ -575,7 +615,7 @@ def gary():
       exit()
       check = false
     elif chc == "north" or chc == "east" or chc == "west" or chc == "south":
-      printNow("You cannot go "+ chc +" from here, try 'pineapple' to exit the secret room, or type EXIT to quit.")
+      showInformation("You cannot go "+ chc +" from here, try 'pineapple' to exit the secret room, or type EXIT to quit.")
       check = true
 
 
