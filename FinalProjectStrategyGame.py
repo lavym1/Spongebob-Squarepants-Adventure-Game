@@ -73,6 +73,8 @@ squidw = changeVolume(makeSound("squidward.wav"),2)
 garyMeow = changeVolume(makeSound("gary.wav"),2)
 
 def playGame():
+  global pic
+  pic = makePicture("Spongebob_Adventure_Game.jpg")
   sound = makeSound("SB_intro.wav")
   play(sound)
   printNow("******* Spongebob Squarepants Adventure Game *******")
@@ -104,6 +106,11 @@ def exit():
   repaint(pic)
   addTextWithStyle(pic, 310, 515, "Goodbye " + name + " !", s, red)
   repaint(pic)
+  #reset objects on exit
+  global object1picked, object2picked, object3picked
+  object1picked = false #spatula
+  object2picked = false #krabby patty
+  object3picked = false #secret formula
   return
 
 # help function
